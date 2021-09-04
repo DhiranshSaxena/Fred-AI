@@ -6,6 +6,8 @@ import webbrowser
 import os
 import smtplib
 import pywhatkit as kit
+import requests
+from bs4 import BeautifulSoup
 
 engine = pyttsx3.init('sapi5')
 voices = engine.getProperty('voices')
@@ -29,7 +31,8 @@ def wishMe():
     else:
         speak("Good Evening!")  
 
-    speak("I am Fred Sir. Please tell me how may I help you")       
+    speak("I am Fred Sir. Please tell me how may I help you. These are the following things that I can do.")
+    print("1. Search Anything On WikiPedia\n2. Open YouTube\n3. Open Google\n4. Open StackOverflow\n5. Play Songs of your Choice\n6. Search Anything on Internet\n7. Tell you temperature of Anywhere\n8. Tell you the time\n9. E-Mail Someone \n10. Open My Code\n\n You can shut down me by Saying Close Fred")       
 
 def takeCommand():
     #It takes microphone input from the user and returns string output
@@ -98,6 +101,18 @@ if __name__ == "__main__":
         elif 'close' in query:
             speak(f"Thank You Sir for allowing me to help!")
             working = False
+
+        elif 'temperature' in query:
+            query = query.replace("What is", "")
+            url = f"https://www.google.com/search?q={query}"
+            r = requests.get(url)
+            data = BeautifulSoup(r.text, "html.parser")
+            temp = data.find("div", class_="BNeawe").text
+            speak(f"Current {query} is {temp}")
+
+        elif 'internet speed' in query:
+            query = query.replace("What is", "")
+
 
 
         elif 'the time' in query:
